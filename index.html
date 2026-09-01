@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Bernita Rivers Awareness Foundation | #AmyloidosisExists</title>
+<meta name="description" content="The Bernita Rivers Awareness Foundation — a nonprofit raising awareness of ATTR cardiac amyloidosis. Founded in memory of Bishop Bernita Rivers Smalls, Ph.D.">
+<style>
+  :root{
+    --navy:#1a2c52;
+    --navy-deep:#101d38;
+    --navy-hover:#233a68;
+    --cream:#fdfcf8;
+    --text:#2d2d2d;
+    --text-muted:#5a5a5a;
+    --gold:#c9a227;
+    --gold-light:#f0e2b0;
+    --border:#e2e0d8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    background:var(--cream);
+    color:var(--text);
+    line-height:1.6;
+  }
+  img{max-width:100%;display:block}
+  a{color:inherit}
+  button{cursor:pointer;font:inherit}
+  :focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .container{max-width:1100px;margin-inline:auto;padding-inline:24px}
+
+  /* Header */
+  header.site-header{
+    position:sticky;top:0;z-index:50;
+    background:rgba(253,252,248,.95);backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);
+  }
+  .nav-inner{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    max-width:1100px;margin-inline:auto;padding:14px 24px;
+  }
+  .nav-logo{font-weight:700;font-size:1.05rem;color:var(--navy);text-decoration:none}
+  .nav-tabs{display:flex;gap:4px}
+  .nav-tab{
+    background:none;border:none;padding:8px 14px;border-radius:999px;
+    font-size:.92rem;font-weight:600;color:var(--text-muted);
+  }
+  .nav-tab:hover{background:var(--gold-light)}
+  .nav-tab.active{background:var(--navy);color:#fff}
+  .btn-join{
+    background:var(--navy);color:#fff;border:none;padding:10px 20px;
+    border-radius:999px;font-weight:700;font-size:.9rem;text-decoration:none;
+  }
+  .btn-join:hover{background:var(--navy-hover)}
+  @media (max-width:760px){ .nav-tabs{display:none} }
+
+  /* Hero */
+  .hero{padding:64px 0 56px;border-bottom:1px solid var(--border)}
+  .hero-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
+  @media (min-width:800px){ .hero-grid{grid-template-columns:1.2fr .8fr} }
+  .hero h1{font-size:clamp(2rem,4vw,2.75rem);color:var(--navy);line-height:1.15;margin-bottom:18px}
+  .hero-badge{
+    display:inline-block;font-weight:700;color:var(--navy-deep);
+    background:var(--gold-light);border-radius:999px;padding:8px 18px;
+    font-size:.95rem;margin-bottom:20px;
+  }
+  .hero-cta-group{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px}
+  .btn-primary{
+    background:var(--navy);color:#fff;border:none;padding:14px 30px;
+    border-radius:999px;font-weight:700;text-decoration:none;font-size:1rem;
+  }
+  .btn-primary:hover{background:var(--navy-hover)}
+  .btn-outline{
+    background:transparent;color:var(--navy);border:2px solid var(--navy);
+    padding:12px 28px;border-radius:999px;font-weight:700;text-decoration:none;font-size:1rem;
+  }
+  .btn-outline:hover{background:var(--navy);color:#fff}
+  .photo-placeholder{
+    border:2px dashed var(--border);border-radius:16px;background:#fff;
+    aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:10px;color:var(--text-muted);text-align:center;padding:20px;
+  }
+  .photo-placeholder span{font-size:.82rem;line-height:1.4}
+
+  /* Daughter's Vow */
+  .story{padding:64px 0;background:#fff;border-bottom:1px solid var(--border)}
+  .story-grid{display:grid;grid-template-columns:1fr;gap:40px}
+  @media (min-width:800px){ .story-grid{grid-template-columns:.8fr 1.2fr} }
+  .story-eyebrow{color:var(--gold);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:.82rem;margin-bottom:8px}
+  .story h2{color:var(--navy);font-size:1.9rem;margin-bottom:20px}
+  .story p{color:var(--text-muted);margin-bottom:16px;max-width:65ch}
+  .pull-quote{
+    border-left:4px solid var(--gold);background:var(--gold-light);
+    padding:16px 22px;margin:24px 0;border-radius:0 10px 10px 0;
+  }
+  .pull-quote p{font-style:italic;color:var(--navy-deep);margin:0;font-size:1.05rem}
+  .vow-line{font-style:italic;color:var(--navy);font-size:1.15rem;margin:20px 0!important}
+  .byline{font-weight:700;color:var(--text);margin-top:20px!important}
+  .card-placeholder{
+    border:2px dashed var(--border);border-radius:16px;background:var(--cream);
+    min-height:280px;display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:10px;color:var(--text-muted);text-align:center;padding:20px;
+  }
+
+  /* Sign up */
+  .signup{padding:64px 0;background:var(--cream)}
+  .signup h2{color:var(--navy);font-size:1.7rem;margin-bottom:10px}
+  .signup > .container > p{color:var(--text-muted);margin-bottom:28px;max-width:60ch}
+  .needs-content{
+    border:2px dashed var(--gold);background:var(--gold-light);
+    border-radius:12px;padding:20px 24px;color:var(--navy-deep);font-size:.92rem;max-width:60ch;
+  }
+  .hashtag-display{margin-top:28px;font-family:Georgia,serif;font-style:italic;font-size:1.4rem;color:var(--gold)}
+
+  /* Placeholder tab sections */
+  .tab-placeholder{padding:64px 0;text-align:center}
+  .tab-placeholder h1{color:var(--navy);font-size:1.8rem;margin-bottom:14px}
+  .tab-placeholder p{color:var(--text-muted);max-width:60ch;margin-inline:auto}
+
+  /* Footer */
+  footer.site-footer{background:var(--navy-deep);color:#fff;padding:40px 0}
+  footer.site-footer .brand{font-weight:700;font-size:1.05rem}
+  footer.site-footer .hashtag{color:var(--gold);font-style:italic;margin-top:6px}
+  footer.site-footer .needs-content{
+    margin-top:16px;border-color:var(--gold);background:transparent;color:#f0e2b0;
+  }
+
+  .page-section{display:none}
+  .page-section.active{display:block}
+  .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="sr-only">Skip to main content</a>
+
+<header class="site-header">
+  <nav class="nav-inner" aria-label="Main navigation">
+    <a href="#" class="nav-logo" onclick="showSection('public');return false;">The Bernita Rivers Awareness Foundation</a>
+    <div class="nav-tabs" role="tablist">
+      <button class="nav-tab active" onclick="showSection('public')" id="tab-public">Community &amp; Public</button>
+      <button class="nav-tab" onclick="showSection('providers')" id="tab-providers">For Healthcare Providers</button>
+      <button class="nav-tab" onclick="showSection('partners')" id="tab-partners">Partner With Us</button>
+    </div>
+    <a href="#signup" class="btn-join" onclick="showSection('public')">Join the Campaign</a>
+  </nav>
+</header>
+
+<main id="main-content">
+
+<div class="page-section active" id="section-public">
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div>
+        <div class="hero-badge">Please listen. Please don't dismiss the signs.</div>
+        <h1>A Plea for ATTR Cardiac Amyloidosis Awareness</h1>
+        <div class="hero-cta-group">
+          <a href="#signup" class="btn-primary">Join the Campaign</a>
+          <a href="#the-story" class="btn-outline">Her Story</a>
+        </div>
+      </div>
+      <div class="photo-placeholder">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <span>Photo of Rev. Dr. Elveria Glover<br>— add here</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="story" id="the-story">
+    <div class="container story-grid">
+      <div class="card-placeholder">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+        <span>Commemorative card image of<br>Bishop Bernita Rivers Smalls, Ph.D.<br>— add here</span>
+      </div>
+      <div>
+        <p class="story-eyebrow">A Daughter's Vow</p>
+        <h2>Why I Started This Campaign</h2>
+        <p>Bishop Bernita Rivers Smalls, Ph.D. was my mother, my pastor, and my best friend. On August 22, 2025, amyloidosis took her from us — a disease her medical providers never identified, because too few physicians know to look for it.</p>
+
+        <div class="pull-quote">
+          <p>"A treatment existed. My mother simply never had the chance to receive it, because no one knew to look for the disease."</p>
+        </div>
+
+        <p>Amyloidosis disproportionately affects Black Americans, yet it remains one of the most overlooked diseases in modern medicine. Every symptom dismissed as "just getting older" is a chance for an earlier diagnosis lost.</p>
+
+        <p class="vow-line">"I can't," I cried, "let this happen to another family."</p>
+
+        <p>That vow is why this foundation exists — so that no other family experiences what mine did: watching someone they love fight the wrong battle because the right diagnosis came too late.</p>
+
+        <p class="byline">— Rev. Dr. Elveria Glover, Founder</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="signup" id="signup">
+    <div class="container">
+      <h2>Join the Campaign</h2>
+      <p>Add your voice to #AmyloidosisExists.</p>
+      <div class="needs-content">
+        <strong>Placeholder — needs your input:</strong> I couldn't verify the exact sign-up form fields from the live site (the page content got cut off before reaching the form). Tell me what fields it should have — e.g. Name, Email, others — and I'll build it exactly to that.
+      </div>
+      <div class="hashtag-display">#AmyloidosisExists</div>
+    </div>
+  </section>
+
+</div>
+
+<div class="page-section" id="section-providers">
+  <div class="container tab-placeholder">
+    <h1>For Healthcare Providers</h1>
+    <p><strong>Placeholder — needs your input:</strong> I could not retrieve this tab's content from the live site. Please give me the text/content for this page and I'll build it here.</p>
+  </div>
+</div>
+
+<div class="page-section" id="section-partners">
+  <div class="container tab-placeholder">
+    <h1>Partner With Us</h1>
+    <p><strong>Placeholder — needs your input:</strong> I could not retrieve this tab's content from the live site. Please give me the text/content for this page and I'll build it here.</p>
+  </div>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="brand">The Bernita Rivers Awareness Foundation</div>
+    <div class="hashtag">#AmyloidosisExists</div>
+    <div class="needs-content">
+      <strong>Placeholder — needs your input:</strong> I could not retrieve the actual footer content (links, copyright text, disclaimer) from the live site. Tell me what should be here.
+    </div>
+  </div>
+</footer>
+
+<script>
+function showSection(name){
+  document.querySelectorAll('.page-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('section-'+name).classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('a[href^="#"]').forEach(a=>{
+  a.addEventListener('click',function(e){
+    const target=document.querySelector(this.getAttribute('href'));
+    if(target){ e.preventDefault(); target.scrollIntoView({behavior:'smooth'}); }
+  });
+});
+</script>
+
+</body>
+</html>
