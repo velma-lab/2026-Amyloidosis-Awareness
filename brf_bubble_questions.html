@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bernita Rivers Awareness Foundation — Bubble Questions</title>
+<style>
+  :root{
+    --brf-purple:#4B2E83;
+    --brf-purple-deep:#3A2168;
+    --brf-purple-light:#8C6BC8;
+    --brf-gold:#C9A227;
+    --brf-gold-light:#E8CE7A;
+    --brf-cream:#FBF7EF;
+    --brf-lavender:#F3EDFA;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:Georgia,"Times New Roman",serif;
+    background:linear-gradient(175deg,var(--brf-lavender) 0%,#E4D9F3 55%,#D3C2EC 100%);
+    min-height:100vh;overflow-x:hidden;
+  }
+  header{text-align:center;padding:36px 16px 6px}
+  header .badge{
+    display:inline-block;background:var(--brf-purple);color:#fff;
+    font-size:.72rem;letter-spacing:.18em;padding:7px 20px;border-radius:999px;
+    font-family:-apple-system,"Segoe UI",sans-serif;font-weight:600;
+  }
+  header h1{color:var(--brf-purple);font-size:2rem;margin-top:14px;letter-spacing:.02em}
+  header h1 span{color:var(--brf-gold)}
+  header p{color:#6A5495;font-size:.95rem;margin-top:8px;font-style:italic}
+
+  .bubble-field{position:relative;width:100%;height:62vh;min-height:460px}
+
+  .bubble{
+    position:absolute;bottom:-160px;border-radius:50%;border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;text-align:center;padding:26px;
+    color:var(--brf-purple-deep);font-weight:600;line-height:1.35;
+    font-family:-apple-system,"Segoe UI",sans-serif;
+    background:
+      radial-gradient(circle at 30% 25%, rgba(255,255,255,.96) 0%, rgba(255,255,255,.3) 18%, rgba(255,255,255,0) 40%),
+      radial-gradient(circle at 72% 78%, rgba(201,162,39,.35) 0%, rgba(201,162,39,0) 45%),
+      radial-gradient(circle at 60% 20%, rgba(140,107,200,.4) 0%, rgba(140,107,200,0) 50%),
+      radial-gradient(circle at 50% 50%, rgba(255,255,255,.15) 55%, rgba(75,46,131,.35) 92%, rgba(232,206,122,.85) 100%);
+    box-shadow:
+      inset 0 0 24px rgba(255,255,255,.55),
+      inset -6px -8px 20px rgba(75,46,131,.3),
+      0 10px 28px rgba(58,33,104,.25);
+    animation:blow 16s linear infinite, wobble 5s ease-in-out infinite;
+    transition:transform .18s ease;
+  }
+  .bubble:hover{transform:scale(1.07);animation-play-state:paused,running}
+  .bubble:focus-visible{outline:3px solid var(--brf-gold);outline-offset:4px}
+  .bubble span{font-size:clamp(.7rem,1.5vw,.92rem);text-shadow:0 1px 4px rgba(255,255,255,.9);pointer-events:none}
+
+  @keyframes blow{
+    0%{transform:translateY(0) translateX(0) scale(.55);opacity:0}
+    6%{opacity:1}
+    50%{transform:translateY(-44vh) translateX(var(--sway)) scale(1)}
+    94%{opacity:1}
+    100%{transform:translateY(-84vh) translateX(calc(var(--sway) * -0.6)) scale(1.04);opacity:0}
+  }
+  @keyframes wobble{
+    0%,100%{border-radius:50% 50% 49% 51%/51% 49% 50% 50%}
+    33%{border-radius:49% 51% 50% 50%/50% 50% 51% 49%}
+    66%{border-radius:51% 49% 51% 49%/49% 51% 49% 51%}
+  }
+  .bubble:nth-child(1){left:5%; width:150px;height:150px;--sway:38px; animation-delay:0s,0s}
+  .bubble:nth-child(2){left:24%;width:172px;height:172px;--sway:-46px;animation-delay:2.8s,.7s}
+  .bubble:nth-child(3){left:44%;width:160px;height:160px;--sway:30px; animation-delay:5.6s,1.4s}
+  .bubble:nth-child(4){left:63%;width:175px;height:175px;--sway:-34px;animation-delay:8.4s,.4s}
+  .bubble:nth-child(5){left:81%;width:150px;height:150px;--sway:42px; animation-delay:11.2s,1s}
+
+  .bubble.popping{animation:pop .35s ease-out forwards}
+  @keyframes pop{40%{transform:scale(1.25);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+
+  .mini{position:absolute;bottom:-40px;border-radius:50%;pointer-events:none;opacity:.7;
+    background:radial-gradient(circle at 32% 28%,rgba(255,255,255,.9),rgba(201,162,39,.3) 70%,rgba(232,206,122,.6));
+    animation:blow 12s linear infinite}
+  .mini.m1{left:15%;width:20px;height:20px;--sway:20px;animation-delay:1.5s}
+  .mini.m2{left:37%;width:13px;height:13px;--sway:-16px;animation-delay:4.2s}
+  .mini.m3{left:56%;width:17px;height:17px;--sway:24px;animation-delay:7s}
+  .mini.m4{left:73%;width:12px;height:12px;--sway:-20px;animation-delay:9.5s}
+  .mini.m5{left:90%;width:19px;height:19px;--sway:16px;animation-delay:12.3s}
+
+  .answerbar{
+    position:fixed;left:50%;bottom:52px;transform:translateX(-50%);
+    width:min(700px,92vw);display:flex;gap:10px;align-items:center;
+    background:#fff;border:1.5px solid var(--brf-gold);border-radius:999px;padding:10px 20px;
+    box-shadow:0 8px 30px rgba(58,33,104,.28);
+    font-family:-apple-system,"Segoe UI",sans-serif;
+  }
+  .answerbar input{flex:1;border:none;outline:none;font-size:1rem;color:var(--brf-purple-deep);background:transparent}
+  .answerbar button{border:none;border-radius:999px;padding:9px 22px;font-weight:600;cursor:pointer;
+    background:linear-gradient(135deg,var(--brf-purple),var(--brf-purple-light));color:#fff}
+
+  .footer{
+    position:fixed;left:0;right:0;bottom:0;text-align:center;
+    background:var(--brf-purple-deep);color:var(--brf-gold-light);
+    font-size:.72rem;letter-spacing:.16em;padding:8px 12px;
+    font-family:-apple-system,"Segoe UI",sans-serif;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .bubble,.mini{animation:none;position:static;margin:12px auto;opacity:1}
+    .bubble-field{display:flex;flex-wrap:wrap;justify-content:center;height:auto;padding:20px}
+  }
+</style>
+</head>
+<body>
+  <header>
+    <span class="badge">PLEASE LISTEN. PLEASE DON'T DISMISS THE SIGNS.</span>
+    <h1>A Plea for <span>Awareness</span></h1>
+    <p>Catch a bubble — every question can lead to an earlier diagnosis</p>
+  </header>
+
+  <div class="bubble-field">
+    <button class="bubble"><span>Do you know the warning signs of amyloidosis?</span></button>
+    <button class="bubble"><span>Could it be more than "just getting older"?</span></button>
+    <button class="bubble"><span>Why is amyloidosis called the "great imitator"?</span></button>
+    <button class="bubble"><span>When should you ask for a second opinion?</span></button>
+    <button class="bubble"><span>Who was Bishop Dr. Bernita Rivers Smalls?</span></button>
+    <div class="mini m1"></div><div class="mini m2"></div><div class="mini m3"></div>
+    <div class="mini m4"></div><div class="mini m5"></div>
+  </div>
+
+  <div class="answerbar">
+    <input id="chatbox" type="text" placeholder="Ask about amyloidosis…" aria-label="Ask about amyloidosis">
+    <button onclick="alert('In the live build, this sends the question to the foundation\'s AI companion or FAQ.')">Ask</button>
+  </div>
+  <div class="footer">LEARN &nbsp;•&nbsp; SHARE &nbsp;•&nbsp; ADVOCATE &nbsp;—&nbsp; THE BERNITA RIVERS AWARENESS FOUNDATION</div>
+
+<script>
+  document.querySelectorAll('.bubble').forEach(b=>{
+    b.addEventListener('click',()=>{
+      const text=b.querySelector('span').textContent;
+      b.classList.add('popping');
+      setTimeout(()=>{
+        document.getElementById('chatbox').value=text;
+        document.getElementById('chatbox').focus();
+        setTimeout(()=>b.classList.remove('popping'),4000);
+      },300);
+    });
+  });
+</script>
+</body>
+</html>
