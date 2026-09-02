@@ -400,8 +400,8 @@ a, button, [role="button"] {
 .hero-tagline {
   font-size: var(--text-base);
   color: #fff;
-  width: var(--hero-text-w, 44ch);
-  max-width: var(--hero-text-w, 44ch);
+  width: 100%;
+  max-width: 65ch;
   margin-bottom: var(--space-6);
   line-height: 1.5;
   text-align: justify;
@@ -795,7 +795,7 @@ a, button, [role="button"] {
   font-family: var(--font-display);
   font-style: italic;
   font-size: clamp(0.95rem, 0.875rem + 0.35vw, 1.075rem);
-  color: var(--color-text);
+  color: #1B1030;
   margin-top: var(--space-3);
 }
 .crisis-section {
@@ -972,6 +972,8 @@ a, button, [role="button"] {
 .share-btn-ig { background: linear-gradient(135deg, #f9a825, #e91e8c, #7b2fff); color: #fff; }
 .share-btn-x { background: #000; color: #fff; }
 [data-theme="dark"] .share-btn-x { background: #fff; color: #000; }
+.share-btn-li { background: #0A66C2; color: #fff; }
+.share-btn-li:hover { background: #084d92; }
 .share-btn-x:hover { background: #333; }
 [data-theme="dark"] .share-btn-x:hover { background: #e5e5e5; }
 .hashtag-display {
@@ -1642,7 +1644,7 @@ a, button, [role="button"] {
         <div class="action-card fade-in">
           <div class="action-number">4</div>
           <h3>Host an Awareness Event</h3>
-          <p>Bring the campaign to your church, barber shop, community center, or health fair. We will provide materials.</p>
+          <p>Bring the campaign to your church, barber shop, community center, or health fair. We, a partner or sponsor, will provide materials.</p>
         </div>
         <div class="action-card fade-in">
           <div class="action-number">5</div>
@@ -1732,6 +1734,10 @@ a, button, [role="button"] {
             <a href="https://twitter.com/intent/tweet?text=I%20just%20learned%20that%20amyloidosis%20exists%20and%20disproportionately%20affects%20Black%20Americans.%20Join%20the%20campaign%20to%20spread%20awareness.%20%23AmyloidosisExists%20%23NationalAmyloidosisExistAwarenessCampaign" target="_blank" rel="noopener noreferrer" class="share-btn share-btn-x" aria-label="Share on X / Twitter">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
               Share on X / Twitter
+            </a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://thebernitariversawarenessfoundation.org" target="_blank" rel="noopener noreferrer" class="share-btn share-btn-li" aria-label="Share on LinkedIn">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56z"/></svg>
+              Share on LinkedIn
             </a>
           </div>
 
@@ -2147,7 +2153,7 @@ a, button, [role="button"] {
         <h4>Resources</h4>
         <ul class="footer-links">
           <li><a href="https://arci.org" target="_blank" rel="noopener noreferrer">Amyloidosis Research Consortium</a></li>
-          <li><a href="https://amyloidosissupport.com" target="_blank" rel="noopener noreferrer">Amyloidosis Support Groups</a></li>
+          <li><a href="https://www.amyloidosissupport.org" target="_blank" rel="noopener noreferrer">Amyloidosis Support Groups</a></li>
           <li><a href="https://www.togetherforrare.com" target="_blank" rel="noopener noreferrer">Together for Rare</a></li>
         </ul>
       </div>
