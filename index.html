@@ -20,9 +20,9 @@
    DESIGN TOKENS
 ============================================================ */
 :root {
-  --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
-  --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
-  --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+  --text-xs:   clamp(0.85rem,  0.8rem  + 0.25vw, 1rem);
+  --text-sm:   clamp(1rem,     0.95rem + 0.35vw, 1.125rem);
+  --text-base: clamp(1.125rem, 1.05rem + 0.3vw,  1.25rem);
   --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
   --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
   --text-2xl:  clamp(2rem,     1.2rem  + 2.5vw,  3.5rem);
@@ -48,7 +48,7 @@
 
   --color-text:           #3A2168;
   --color-text-muted:     #4B2E83;
-  --color-text-faint:     #7A5FA8;
+  --color-text-faint:     #5C3F8F;
   --color-text-inverse:   #FBF7EF;
 
   /* Warm gold — sunlight in a distant sky */
@@ -722,7 +722,7 @@ a, button, [role="button"] {
 }
 
 .stats-section {
-  background: linear-gradient(150deg, #4B2E83 0%, #7A5FA8 40%, #D4A94A 100%);
+  background: linear-gradient(150deg, #4B2E83 0%, #6F4FAE 100%);
   padding-block: clamp(var(--space-16), 8vw, var(--space-24));
   color: #fff;
   position: relative; overflow: hidden;
@@ -762,7 +762,7 @@ a, button, [role="button"] {
   font-family: var(--font-display);
   font-size: clamp(2.5rem, 5vw, 4rem);
   font-weight: 700;
-  color: #F0D890;
+  color: #fff;
   line-height: 1;
   margin-bottom: var(--space-2);
 }
@@ -1017,7 +1017,7 @@ a, button, [role="button"] {
    SECTION: HEALTHCARE PROVIDERS
 ============================================================ */
 .provider-hero {
-  background: linear-gradient(135deg, #4B2E83 0%, #6F4FAE 45%, #C7A552 85%, #E8CE7A 100%);
+  background: linear-gradient(135deg, #4B2E83 0%, #6F4FAE 100%);
   padding: clamp(var(--space-16), 8vw, var(--space-20)) 0;
   color: #fff;
 }
@@ -1119,7 +1119,7 @@ a, button, [role="button"] {
    SECTION: CORPORATE PARTNERS
 ============================================================ */
 .partner-hero {
-  background: linear-gradient(135deg, #4B2E83 0%, #6F4FAE 45%, #C7A552 85%, #E8CE7A 100%);
+  background: linear-gradient(135deg, #4B2E83 0%, #6F4FAE 100%);
   padding: clamp(var(--space-16), 8vw, var(--space-20)) 0;
   color: #fff;
 }
@@ -1232,7 +1232,7 @@ a, button, [role="button"] {
    FOOTER
 ============================================================ */
 .site-footer {
-  background: linear-gradient(135deg, #4B2E83 0%, #6F4FAE 45%, #C7A552 85%, #E8CE7A 100%);
+  background: linear-gradient(135deg, #4B2E83 0%, #6F4FAE 100%);
   color: #fff;
   padding-block: clamp(var(--space-12), 6vw, var(--space-20));
 }
@@ -1244,13 +1244,13 @@ a, button, [role="button"] {
 .footer-brand p {
   font-size: var(--text-sm); line-height: 1.7;
   max-width: 40ch; margin-top: var(--space-4);
-  color: #EDE0F7;
+  color: #fff;
 }
 .footer-brand-name { font-family: var(--font-display); font-size: var(--text-lg); color: #fff; font-weight: 700; }
 .footer-hashtag { font-style: italic; color: #fff; margin-top: var(--space-2); font-size: var(--text-sm); }
 .footer-col h4 { font-size: var(--text-sm); font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--space-4); }
 .footer-links { list-style: none; display: flex; flex-direction: column; gap: var(--space-2); }
-.footer-links a { font-size: var(--text-sm); color: #EDE0F7; text-decoration: none; }
+.footer-links a { font-size: var(--text-sm); color: #fff; text-decoration: none; }
 .footer-links a:hover { color: #fff; }
 .footer-bottom {
   margin-top: var(--space-10);
