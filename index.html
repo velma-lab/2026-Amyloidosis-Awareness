@@ -382,6 +382,12 @@ a, button, [role="button"] {
   line-height: 1.3;
   text-align: center;
   margin-inline: auto;
+  text-shadow:
+    0 0 6px #fff,
+    0 0 14px #fff,
+    0 0 26px #E8C468,
+    0 0 46px #E8C468,
+    0 0 80px #E8C468;
 }
 .hero h1 em { font-style: italic; color: #ffe08a; }
 
@@ -974,6 +980,10 @@ a, button, [role="button"] {
 [data-theme="dark"] .share-btn-x { background: #fff; color: #000; }
 .share-btn-li { background: #0A66C2; color: #fff; }
 .share-btn-li:hover { background: #084d92; }
+.share-btn-fanbase { background: #4B2E83; color: #fff; }
+.share-btn-fanbase:hover { background: #3A2168; }
+.share-btn-spark { background: linear-gradient(135deg, #B8892E, #6F4FAE); color: #fff; }
+.share-btn-spark:hover { filter: brightness(0.92); }
 .share-btn-x:hover { background: #333; }
 [data-theme="dark"] .share-btn-x:hover { background: #e5e5e5; }
 .hashtag-display {
@@ -1373,7 +1383,7 @@ a, button, [role="button"] {
         </div>
       </div>
       <p class="hero-tagline-lead"><strong>A treatment can only be administered for a known disease.</strong></p>
-      <p class="hero-tagline">Too many people, including physicians, do not know amyloidosis exists.<br>That change began for the Reverend Elveria Glover, Ph.D. on August 22, 2025. The day she lost her mother, Bishop Bernita Rivers Smalls, Ph.D. to a lack of amyloidosis awareness. Amyloidosis disproportionately affects Black Americans, yet it remains one of the most overlooked diseases in modern medicine. Every symptom dismissed as &ldquo;just getting older&rdquo; is a chance for an earlier diagnosis lost. &#8220;I can&#8217;t,&#8221; she cried, &#8220;let this happen to another family.&#8221;</p>
+      <p class="hero-tagline">Too many people, including physicians, do not know amyloidosis exists.<br>That change began for the Reverend Elveria Glover, Ph.D. on August 22, 2025. The day she lost her mother, Bishop Bernita Rivers Smalls, Ph.D. to a lack of amyloidosis awareness. Amyloidosis disproportionately affects Black Americans, yet it remains one of the most overlooked diseases in modern medicine. Every symptom dismissed as &ldquo;just getting older&rdquo; is a chance for an earlier diagnosis lost.<span style="display:block; text-align:center;">&#8220;I can&#8217;t,&#8221; she cried, &#8220;let this happen to another family.&#8221;</span></p>
       <div class="hero-cta-group">
         <a href="#signup" class="btn-primary">Join the Campaign</a>
         <a href="#the-story" class="btn-outline-white">Her Story</a>
@@ -1738,6 +1748,14 @@ a, button, [role="button"] {
             <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://thebernitariversawarenessfoundation.org" target="_blank" rel="noopener noreferrer" class="share-btn share-btn-li" aria-label="Share on LinkedIn">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.28 2.38 4.28 5.47zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56z"/></svg>
               Share on LinkedIn
+            </a>
+            <a href="https://fanbaseapp.com" target="_blank" rel="noopener noreferrer" class="share-btn share-btn-fanbase" aria-label="Share on Fanbase">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 7v10M7 12h10" stroke="#fff" stroke-width="2" fill="none"/></svg>
+              Share on Fanbase
+            </a>
+            <a href="https://fanbaseapp.com" target="_blank" rel="noopener noreferrer" class="share-btn share-btn-spark" aria-label="Share on Fanbase Spark">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/></svg>
+              Share on Fanbase Spark
             </a>
           </div>
 
@@ -2160,10 +2178,48 @@ a, button, [role="button"] {
     </div>
     <div class="footer-bottom">
       <p>The Bernita Rivers Awareness Foundation website is a public health awareness initiative of the nonprofit organization, Life Skills Empowerment Center, Inc. It is not a medical provider, pharmaceutical company, or clinical service. Always consult a qualified physician for medical advice, diagnosis, or treatment. References to BridgeBio Pharma, Inc. are for informational purposes only.</p>
-      <p style="margin-top: var(--space-3);">© 2026 The Bernita Rivers Awareness Foundation. All rights reserved. This campaign is founded in memory of Bishop Bernita Rivers Smalls, Ph.D.  This is a You Have People&trade;&mdash;artificial intelligence-assisted&mdash;created website.</p>
+      <p style="margin-top: var(--space-3);">© 2026 The Bernita Rivers Awareness Foundation. All rights reserved. This campaign is founded in memory of Bishop Bernita Rivers Smalls, Ph.D.  This is a You Have People&trade;&mdash;artificial intelligence-assisted&mdash;created website by Velma McKenzie-Orr.</p>
     </div>
   </div>
 </footer>
+
+<!-- Back to Top -->
+<button id="back-to-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Back to top" title="Back to top">
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+</button>
+
+<style>
+#back-to-top {
+  position: fixed;
+  right: var(--space-6);
+  bottom: var(--space-6);
+  z-index: 150;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 0.25s ease, transform 0.25s ease, background 0.2s ease, visibility 0.25s;
+}
+#back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+#back-to-top:hover { background: var(--color-primary-hover); }
+@media (prefers-reduced-motion: reduce) {
+  #back-to-top { transition: opacity 0.01ms, visibility 0.01ms; }
+}
+</style>
 
 <!-- ============================================================
      JAVASCRIPT
@@ -2195,10 +2251,12 @@ const partnerData = [];
   }
 })();
 
-// Sticky header shadow
+// Sticky header shadow + back-to-top visibility
 window.addEventListener('scroll', () => {
   const h = document.getElementById('site-header');
   if (h) h.classList.toggle('scrolled', window.scrollY > 20);
+  const btt = document.getElementById('back-to-top');
+  if (btt) btt.classList.toggle('visible', window.scrollY > 400);
 }, { passive: true });
 
 // Section navigation
