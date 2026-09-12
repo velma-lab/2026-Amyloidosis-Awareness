@@ -27,8 +27,21 @@ const CUSTOM_FIELDS = [
   { slug: 'story', fieldName: 'Story' },
 ];
 
+// Systeme.io's built-in field slugs aren't fixed across accounts/locales —
+// e.g. "last name" turned out to be `surname`, not `last_name`, on this
+// account (confirmed via a live 422). So instead of hardcoding slugs, we
+// look up the account's actual contact_fields once and pick whichever
+// candidate slug really exists, falling back to the most likely guess.
+const BUILTIN_FIELD_CANDIDATES = {
+  firstName: ['first_name', 'firstname'],
+  lastName: ['surname', 'last_name', 'lastname'],
+  phone: ['phone_number', 'phone'],
+};
+const BUILTIN_FIELD_FALLBACK = { firstName: 'first_name', lastName: 'surname', phone: 'phone_number' };
+
 // Warm-lambda caches — best-effort only, reset on cold start. They just save
 // redundant lookups; correctness never depends on them surviving.
+let builtinFieldSlugs = null;
 let customFieldsEnsured = false;
 let cachedTagId = null;
 
@@ -50,34 +63,53 @@ function logAndDetail(label, res, bodyText) {
   return { step: label, status: res.status, body: bodyText };
 }
 
-async function ensureCustomFields(apiKey) {
-  if (customFieldsEnsured) return;
+// Resolves the real slugs for first name / last name / phone, and makes sure
+// this campaign's custom fields (join_or_share, city_state, story) exist —
+// creating any that are missing. Cached per warm lambda instance.
+async function ensureFieldSlugs(apiKey) {
+  if (builtinFieldSlugs && customFieldsEnsured) return builtinFieldSlugs;
+
+  let resolved = { ...BUILTIN_FIELD_FALLBACK };
   try {
     const res = await fetch(`${API_BASE}/api/contact_fields?limit=100`, {
       headers: systemeHeaders(apiKey),
     });
     if (!res.ok) {
-      console.error('ensureCustomFields: list failed', res.status, await bodyOf(res));
-      return; // Non-fatal — fields may already exist.
+      console.error('ensureFieldSlugs: list failed', res.status, await bodyOf(res));
+      builtinFieldSlugs = resolved;
+      return resolved;
     }
     const data = await res.json();
     const existingSlugs = new Set((data.items || []).map((f) => f.slug));
-    const missing = CUSTOM_FIELDS.filter((f) => !existingSlugs.has(f.slug));
-    for (const field of missing) {
-      const createRes = await fetch(`${API_BASE}/api/contact_fields`, {
-        method: 'POST',
-        headers: systemeHeaders(apiKey, { 'Content-Type': 'application/json' }),
-        body: JSON.stringify({ fieldName: field.fieldName, slug: field.slug }),
-      });
-      if (!createRes.ok && createRes.status !== 422) {
-        console.error('Could not create custom field', field.slug, createRes.status, await bodyOf(createRes));
-      }
+
+    for (const key of Object.keys(BUILTIN_FIELD_CANDIDATES)) {
+      const match = BUILTIN_FIELD_CANDIDATES[key].find((slug) => existingSlugs.has(slug));
+      if (match) resolved[key] = match;
     }
-    customFieldsEnsured = true;
+    builtinFieldSlugs = resolved;
+
+    if (!customFieldsEnsured) {
+      const missing = CUSTOM_FIELDS.filter((f) => !existingSlugs.has(f.slug));
+      for (const field of missing) {
+        const createRes = await fetch(`${API_BASE}/api/contact_fields`, {
+          method: 'POST',
+          headers: systemeHeaders(apiKey, { 'Content-Type': 'application/json' }),
+          body: JSON.stringify({ fieldName: field.fieldName, slug: field.slug }),
+        });
+        if (!createRes.ok && createRes.status !== 422) {
+          console.error('Could not create custom field', field.slug, createRes.status, await bodyOf(createRes));
+        }
+      }
+      customFieldsEnsured = true;
+    }
   } catch (err) {
-    console.error('ensureCustomFields error:', err);
-    // Non-fatal — continue; the contact write will surface any real problem.
+    console.error('ensureFieldSlugs error:', err);
+    builtinFieldSlugs = resolved;
+    // Non-fatal — continue with fallback slugs; the contact write will
+    // surface any real problem.
   }
+
+  return resolved;
 }
 
 async function getOrCreateTagId(apiKey) {
@@ -166,13 +198,13 @@ function assignTag(apiKey, contactId, tagId) {
   });
 }
 
-function buildFields({ firstName, lastName, phone, ambassadorResponse, cityState, story }) {
+function buildFields(builtin, { firstName, lastName, phone, ambassadorResponse, cityState, story }) {
   const fields = [
-    { slug: 'first_name', value: firstName },
-    { slug: 'last_name', value: lastName },
+    { slug: builtin.firstName, value: firstName },
+    { slug: builtin.lastName, value: lastName },
     { slug: 'join_or_share', value: ambassadorResponse },
   ];
-  if (phone) fields.push({ slug: 'phone_number', value: phone });
+  if (phone) fields.push({ slug: builtin.phone, value: phone });
   if (cityState) fields.push({ slug: 'city_state', value: cityState });
   if (story) fields.push({ slug: 'story', value: story });
   return fields;
@@ -214,10 +246,9 @@ export default async function handler(req, res) {
     return res.status(400).json({ error: 'Invalid response value' });
   }
 
-  const fields = buildFields({ firstName, lastName, phone, ambassadorResponse, cityState, story });
-
   try {
-    await ensureCustomFields(apiKey);
+    const builtin = await ensureFieldSlugs(apiKey);
+    const fields = buildFields(builtin, { firstName, lastName, phone, ambassadorResponse, cityState, story });
 
     let contactId;
     const existing = await findContactByEmail(apiKey, email);
