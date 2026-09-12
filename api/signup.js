@@ -7,6 +7,13 @@
 //
 // No npm dependencies — uses the built-in fetch and the Systeme.io public API
 // (https://developer.systeme.io/reference).
+//
+// TEMPORARY DEBUG MODE: every error response below includes a `detail` field
+// with the exact upstream Systeme.io status code + response body, and the
+// same is logged via console.error. Remove the `detail` fields (and the
+// bodyOf() logging) once the live failure is diagnosed — they can leak
+// upstream error text to the browser, which is fine for us debugging but not
+// for production.
 
 const API_BASE = 'https://api.systeme.io';
 const TAG_NAME = 'amyloidosis-campaign';
@@ -29,13 +36,30 @@ function systemeHeaders(apiKey, extra = {}) {
   return { 'X-API-Key': apiKey, ...extra };
 }
 
+// Reads a Response body as text without throwing, for logging/debug detail.
+async function bodyOf(res) {
+  try {
+    return await res.text();
+  } catch {
+    return '<unreadable body>';
+  }
+}
+
+function logAndDetail(label, res, bodyText) {
+  console.error(label, res.status, bodyText);
+  return { step: label, status: res.status, body: bodyText };
+}
+
 async function ensureCustomFields(apiKey) {
   if (customFieldsEnsured) return;
   try {
     const res = await fetch(`${API_BASE}/api/contact_fields?limit=100`, {
       headers: systemeHeaders(apiKey),
     });
-    if (!res.ok) return; // Non-fatal — fields may already exist.
+    if (!res.ok) {
+      console.error('ensureCustomFields: list failed', res.status, await bodyOf(res));
+      return; // Non-fatal — fields may already exist.
+    }
     const data = await res.json();
     const existingSlugs = new Set((data.items || []).map((f) => f.slug));
     const missing = CUSTOM_FIELDS.filter((f) => !existingSlugs.has(f.slug));
@@ -46,7 +70,7 @@ async function ensureCustomFields(apiKey) {
         body: JSON.stringify({ fieldName: field.fieldName, slug: field.slug }),
       });
       if (!createRes.ok && createRes.status !== 422) {
-        console.error('Could not create custom field', field.slug, createRes.status, await createRes.text());
+        console.error('Could not create custom field', field.slug, createRes.status, await bodyOf(createRes));
       }
     }
     customFieldsEnsured = true;
@@ -63,7 +87,10 @@ async function getOrCreateTagId(apiKey) {
     const res = await fetch(`${API_BASE}/api/tags?query=${encodeURIComponent(TAG_NAME)}&limit=100`, {
       headers: systemeHeaders(apiKey),
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error('getOrCreateTagId: search failed', res.status, await bodyOf(res));
+      return null;
+    }
     const data = await res.json();
     const match = (data.items || []).find((t) => t.name === TAG_NAME);
     return match ? match.id : null;
@@ -85,6 +112,8 @@ async function getOrCreateTagId(apiKey) {
     cachedTagId = created.id;
     return cachedTagId;
   }
+  const createBody = await bodyOf(createRes);
+  console.error('getOrCreateTagId: create failed', createRes.status, createBody);
 
   // Race: another concurrent request may have just created it.
   const retryFound = await search();
@@ -93,14 +122,22 @@ async function getOrCreateTagId(apiKey) {
     return cachedTagId;
   }
 
-  throw new Error(`Could not find or create tag "${TAG_NAME}"`);
+  const err = new Error(`Could not find or create tag "${TAG_NAME}"`);
+  err.detail = { step: 'getOrCreateTagId', status: createRes.status, body: createBody };
+  throw err;
 }
 
 async function findContactByEmail(apiKey, email) {
   const res = await fetch(`${API_BASE}/api/contacts?email=${encodeURIComponent(email)}`, {
     headers: systemeHeaders(apiKey),
   });
-  if (!res.ok) throw new Error(`Contact lookup failed: ${res.status}`);
+  if (!res.ok) {
+    const bodyText = await bodyOf(res);
+    console.error('findContactByEmail failed', res.status, bodyText);
+    const err = new Error(`Contact lookup failed: ${res.status}`);
+    err.detail = { step: 'findContactByEmail', status: res.status, body: bodyText };
+    throw err;
+  }
   const data = await res.json();
   return (data.items && data.items[0]) || null;
 }
@@ -150,7 +187,7 @@ export default async function handler(req, res) {
   const apiKey = process.env.SYSTEME_API_KEY;
   if (!apiKey) {
     console.error('SYSTEME_API_KEY is not set');
-    return res.status(500).json({ error: 'Server not configured' });
+    return res.status(500).json({ error: 'Server not configured', detail: { step: 'env', message: 'SYSTEME_API_KEY is not set' } });
   }
 
   let body = req.body;
@@ -188,8 +225,8 @@ export default async function handler(req, res) {
     if (existing) {
       const patchRes = await updateContact(apiKey, existing.id, fields);
       if (!patchRes.ok) {
-        console.error('Systeme.io contact update failed', patchRes.status, await patchRes.text());
-        return res.status(502).json({ error: 'Could not save your sign-up. Please try again shortly.' });
+        const detail = logAndDetail('Systeme.io contact update failed', patchRes, await bodyOf(patchRes));
+        return res.status(502).json({ error: 'Could not save your sign-up. Please try again shortly.', detail });
       }
       contactId = existing.id;
     } else {
@@ -200,33 +237,41 @@ export default async function handler(req, res) {
       } else if (createRes.status === 422) {
         // Likely a race: the contact was created between our lookup and this
         // request. Re-fetch and update instead of failing the submission.
+        const createBody = await bodyOf(createRes);
+        console.error('Systeme.io contact create returned 422 (checking for race)', createBody);
         const raced = await findContactByEmail(apiKey, email);
         if (!raced) {
-          console.error('Systeme.io contact create failed', createRes.status, await createRes.text());
-          return res.status(502).json({ error: 'Could not save your sign-up. Please check your email address and try again.' });
+          console.error('Systeme.io contact create failed', createRes.status, createBody);
+          return res.status(502).json({
+            error: 'Could not save your sign-up. Please check your email address and try again.',
+            detail: { step: 'createContact', status: createRes.status, body: createBody },
+          });
         }
         const patchRes = await updateContact(apiKey, raced.id, fields);
         if (!patchRes.ok) {
-          console.error('Systeme.io fallback update failed', patchRes.status, await patchRes.text());
-          return res.status(502).json({ error: 'Could not save your sign-up. Please try again shortly.' });
+          const detail = logAndDetail('Systeme.io fallback update failed', patchRes, await bodyOf(patchRes));
+          return res.status(502).json({ error: 'Could not save your sign-up. Please try again shortly.', detail });
         }
         contactId = raced.id;
       } else {
-        console.error('Systeme.io contact create failed', createRes.status, await createRes.text());
-        return res.status(502).json({ error: 'Could not save your sign-up. Please try again shortly.' });
+        const detail = logAndDetail('Systeme.io contact create failed', createRes, await bodyOf(createRes));
+        return res.status(502).json({ error: 'Could not save your sign-up. Please try again shortly.', detail });
       }
     }
 
     const tagId = await getOrCreateTagId(apiKey);
     const tagRes = await assignTag(apiKey, contactId, tagId);
     if (!tagRes.ok) {
-      console.error('Systeme.io tag assignment failed', tagRes.status, await tagRes.text());
-      return res.status(502).json({ error: 'Your info was saved, but tagging failed. We will follow up manually.' });
+      const detail = logAndDetail('Systeme.io tag assignment failed', tagRes, await bodyOf(tagRes));
+      return res.status(502).json({ error: 'Your info was saved, but tagging failed. We will follow up manually.', detail });
     }
 
     return res.status(200).json({ ok: true });
   } catch (err) {
-    console.error('Signup handler error:', err);
-    return res.status(500).json({ error: 'Unexpected error saving your sign-up. Please try again shortly.' });
+    console.error('Signup handler error:', err, err && err.detail ? JSON.stringify(err.detail) : '');
+    return res.status(500).json({
+      error: 'Unexpected error saving your sign-up. Please try again shortly.',
+      detail: (err && err.detail) || { message: err && err.message },
+    });
   }
 }
