@@ -2324,28 +2324,56 @@ function checkStoryUnlock() {
   }
 }
 
-function handleSignup(e) {
+async function handleSignup(e) {
   e.preventDefault();
   const form = document.getElementById('signup-form');
   const firstName = document.getElementById('first-name').value.trim();
+  const lastName = document.getElementById('last-name').value.trim();
   const email = document.getElementById('email').value.trim();
   const ambassador = document.querySelector('input[name="ambassador"]:checked');
-  if (!firstName || !email || !ambassador) {
-    alert('Please fill in your name, email, and let us know how you\'d like to get involved.');
+  if (!firstName || !lastName || !email || !ambassador) {
+    alert('Please fill in your first and last name, email, and let us know how you\'d like to get involved.');
     return;
   }
-  signupData.push({
-    firstName, 
-    lastName: document.getElementById('last-name').value.trim(),
+
+  const payload = {
+    firstName,
+    lastName,
     email,
     phone: document.getElementById('phone').value.trim(),
-    city: document.getElementById('city').value.trim(),
-    ambassador: ambassador.value,
-    story: document.getElementById('story').value.trim(),
-    timestamp: new Date().toISOString()
-  });
-  form.style.display = 'none';
-  document.getElementById('signup-success').style.display = 'block';
+    cityState: document.getElementById('city').value.trim(),
+    ambassadorResponse: ambassador.value,
+    story: document.getElementById('story').value.trim()
+  };
+
+  const submitBtn = form.querySelector('.btn-submit');
+  const originalBtnText = submitBtn.textContent;
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting…';
+
+  try {
+    const res = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      let message = 'Sorry — something went wrong saving your sign-up. Please try again in a moment.';
+      try {
+        const data = await res.json();
+        if (data && data.error) message = data.error;
+      } catch {}
+      throw new Error(message);
+    }
+    signupData.push({ ...payload, timestamp: new Date().toISOString() });
+    form.style.display = 'none';
+    document.getElementById('signup-success').style.display = 'block';
+  } catch (err) {
+    console.error(err);
+    alert(err.message || 'Sorry — something went wrong saving your sign-up. Please try again in a moment.');
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalBtnText;
+  }
 }
 
 // Form: Provider
