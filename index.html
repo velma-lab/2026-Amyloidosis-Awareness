@@ -2362,9 +2362,7 @@ async function handleSignup(e) {
       try {
         const data = await res.json();
         if (data && data.error) message = data.error;
-        // TEMPORARY DEBUG: the API is echoing back the exact upstream error
-        // while we diagnose the live failure. Remove this block once fixed.
-        if (data && data.detail) message += '\n\n[debug] ' + JSON.stringify(data.detail);
+
       } catch {}
       throw new Error(message);
     }
@@ -2379,26 +2377,58 @@ async function handleSignup(e) {
   }
 }
 
-// Form: Provider
-function handleProviderForm(e) {
-  e.preventDefault();
-  const name = document.getElementById('p-name').value.trim();
-  const email = document.getElementById('p-email').value.trim();
-  if (!name || !email) { alert('Please fill in your name and email.'); return; }
-  providerData.push({ name, email, specialty: document.getElementById('p-specialty').value, institution: document.getElementById('p-institution').value.trim(), interest: document.getElementById('p-interest').value, timestamp: new Date().toISOString() });
-  document.getElementById('provider-form').style.display = 'none';
-  document.getElementById('provider-success').style.display = 'block';
+// Submit provider and partner details through the same server-side connection.
+async function submitAdditionalForm(formType, payload) {
+  const form = document.getElementById(`${formType}-form`);
+  if (!form.reportValidity()) return;
+  const button = form.querySelector('.btn-submit');
+  if (button.disabled) return;
+  const originalText = button.textContent;
+  button.disabled = true;
+  button.textContent = 'Submitting…';
+  try {
+    const response = await fetch('/api/signup', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...payload, formType })
+    });
+    const data = await response.json();
+    if (!response.ok || !data.ok) {
+      throw new Error(data.error || 'Could not save your submission. Please try again shortly.');
+    }
+    const submissions = formType === 'provider' ? providerData : partnerData;
+    submissions.push({ ...payload, timestamp: new Date().toISOString() });
+    form.style.display = 'none';
+    document.getElementById(`${formType}-success`).style.display = 'block';
+  } catch (error) {
+    alert(error.message || 'Could not save your submission. Please try again shortly.');
+  } finally {
+    button.disabled = false;
+    button.textContent = originalText;
+  }
 }
 
-// Form: Partner
+function handleProviderForm(e) {
+  e.preventDefault();
+  return submitAdditionalForm('provider', {
+    name: document.getElementById('p-name').value.trim(),
+    email: document.getElementById('p-email').value.trim(),
+    specialty: document.getElementById('p-specialty').value,
+    institution: document.getElementById('p-institution').value.trim(),
+    interest: document.getElementById('p-interest').value
+  });
+}
+
 function handlePartnerForm(e) {
   e.preventDefault();
-  const org = document.getElementById('org-name').value.trim();
-  const email = document.getElementById('contact-email').value.trim();
-  if (!org || !email) { alert('Please fill in your organization name and email.'); return; }
-  partnerData.push({ org, contactName: document.getElementById('contact-name').value.trim(), email, phone: document.getElementById('contact-phone').value.trim(), interest: document.getElementById('partner-interest').value, message: document.getElementById('partner-message').value.trim(), timestamp: new Date().toISOString() });
-  document.getElementById('partner-form').style.display = 'none';
-  document.getElementById('partner-success').style.display = 'block';
+  return submitAdditionalForm('partner', {
+    org: document.getElementById('org-name').value.trim(),
+    contactName: document.getElementById('contact-name').value.trim(),
+    email: document.getElementById('contact-email').value.trim(),
+    phone: document.getElementById('contact-phone').value.trim(),
+    interest: document.getElementById('partner-interest').value,
+    message: document.getElementById('partner-message').value.trim()
+  });
 }
 
 // Smooth scroll for anchor links
